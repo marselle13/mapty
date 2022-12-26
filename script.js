@@ -14,32 +14,47 @@ const inputElevation = document.querySelector(".form__input--elevation");
 let map;
 let mapEvent;
 
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
-      console.log(position);
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
+class App {
+  #map;
+  #mapEvent;
 
-      console.log(`https://www.google.com/maps/@${latitude},${longitude}`);
-      map = L.map("map").setView([latitude, longitude], 13);
+  constructor() {
+    this._getPosition();
+  }
 
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
-
-      map.on("click", function (map) {
-        mapEvent = map;
-        form.classList.remove("hidden");
-        inputDistance.focus();
-      });
-    },
-    function () {
-      alert("Coult not get your position");
+  _getPosition() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        this._loadMap.bind(this),
+        function () {
+          alert("Coult not get your position");
+        }
+      );
     }
-  );
+  }
+
+  _loadMap(position) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    console.log(`https://www.google.com/maps/@${latitude},${longitude}`);
+    console.log(this);
+    this.#map = L.map("map").setView([latitude, longitude], 13);
+
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(this.#map);
+
+    this.#map.on("click", function (map) {
+      this.#mapEvent = map;
+      form.classList.remove("hidden");
+      inputDistance.focus();
+    });
+  }
 }
+
+const app = new App();
 
 form.addEventListener("submit", function (e) {
   e.preventDefault();
