@@ -26,10 +26,11 @@ if (navigator.geolocation) {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      L.marker([latitude, longitude])
-        .addTo(map)
-        .bindPopup("A pretty CSS3 popup.<br> Easily customizable.")
-        .openPopup();
+      map.on("click", function (event) {
+        const { lat, lng } = event.latlng;
+
+        L.marker([lat, lng]).addTo(map).bindPopup("event").openPopup();
+      });
     },
     function () {
       alert("Coult not get your position");
