@@ -29,7 +29,18 @@ if (navigator.geolocation) {
       map.on("click", function (event) {
         const { lat, lng } = event.latlng;
 
-        L.marker([lat, lng]).addTo(map).bindPopup("event").openPopup();
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(
+            L.popup({
+              maxWidth: 500,
+              minWidth: 100,
+              autoClose: false,
+              closeOnClick: false,
+            })
+          )
+          .setPopupContent("Workout")
+          .openPopup();
       });
     },
     function () {
