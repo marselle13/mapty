@@ -13,7 +13,7 @@ const date = new Date();
 
 class Workout {
   date = new Date();
-  id = (new Date() + "").slice(-10);
+  id = date.getTime();
 
   constructor(coords, distance, duration) {
     this.coords = coords;
@@ -77,6 +77,7 @@ class App {
   #workouts = [];
   constructor() {
     this._getPosition();
+    this._getLocalStorage();
 
     form.addEventListener("submit", this._newWorkout.bind(this));
 
@@ -106,6 +107,10 @@ class App {
     }).addTo(this.#map);
 
     this.#map.on("click", this._showForm.bind(this));
+
+    this.#workouts.forEach((work) => {
+      this._renderWorkoutMarker(work);
+    });
   }
   _showForm(map) {
     this.#mapEvent = map;
@@ -165,8 +170,8 @@ class App {
 
     this._renderWorkoutMarker(workout);
     this._renderWorkout(workout);
-
     this._hideForm();
+    this._setLocalStorage();
   }
 
   _renderWorkoutMarker(workout) {
@@ -233,6 +238,18 @@ class App {
   </div>
 </li> -->`;
     form.insertAdjacentHTML("afterend", html);
+  }
+  _setLocalStorage() {
+    localStorage.setItem("workouts", JSON.stringify(this.#workouts));
+  }
+
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem("workouts"));
+    if (!data) return;
+    this.#workouts = data;
+    this.#workouts.forEach((work) => {
+      this._renderWorkout(work);
+    });
   }
 }
 
