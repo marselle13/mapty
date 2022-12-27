@@ -74,8 +74,6 @@ class App {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
 
-    console.log(`https://www.google.com/maps/@${latitude},${longitude}`);
-    console.log(this);
     this.#map = L.map("map").setView([latitude, longitude], 13);
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -96,12 +94,32 @@ class App {
   }
 
   _newWorkout(e) {
+    const validInput = (...inputs) =>
+      inputs.every((inp) => Number.isFinite(inp));
+
+    const allPositive = (...inputs) => inputs.every((inp) => inp > 0);
+
     e.preventDefault();
 
-    inputDistance.value = "";
-    inputDuration.value = "";
-    inputCadence.value = "";
-    inputElevation.value = "";
+    const type = inputType.value;
+    const distance = +inputDistance.value;
+    const duration = +inputDuration.value;
+    if (type === "running") {
+      const cadence = +inputCadence.value;
+      console.log(cadence);
+      if (
+        !validInput(distance, duration, cadence) ||
+        !allPositive(distance, duration, cadence)
+      )
+        return alert("Inputs have to be positive Numbers!");
+    } else if (type === "cycling") {
+      const elevation = +inputElevation.value;
+      if (
+        !validInput(distance, duration, elevation) ||
+        !allPositive(distance, duration)
+      )
+        return alert("Inputs have to be positive Numbers!");
+    }
 
     const { lat, lng } = this.#mapEvent.latlng;
     L.marker([lat, lng])
