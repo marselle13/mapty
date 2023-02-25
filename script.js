@@ -174,14 +174,23 @@ class App {
   }
 
   _renderWorkoutMarker(workout) {
-    let myIcon = L.icon({
-      iconUrl: "marker-icon.61a78335.png",
+    const myIcon = L.icon({
+      iconUrl: "marker-icon.3f7d3721.png",
       iconAnchor: [15, 80],
       popupAnchor: [-3, -70],
     });
 
-    L.marker(workout.coords, { icon: myIcon })
-      .addTo(this.#map)
+    const fallBackIcon = L.icon({
+      iconUrl: "marker-icon.61a78335.png",
+    });
+
+    const marker = L.marker(workout.coords, { icon: myIcon }).addTo(this.#map);
+
+    marker._icon.onerror = function () {
+      this.src = fallBackIcon.options.iconUrl;
+    };
+
+    marker
       .bindPopup(
         L.popup({
           maxWidth: 500,
