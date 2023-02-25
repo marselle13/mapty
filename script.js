@@ -188,6 +188,7 @@ class App {
 
     marker._icon.onerror = function () {
       this.src = fallBackIcon.options.iconUrl;
+      this.onerror = null;
     };
 
     marker
