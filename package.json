@@ -1,5 +1,23 @@
 {
   "dependencies": {
-    "leaflet": "^1.9.3"
-  }
+    "leaflet": "^1.9.3",
+    "parcel": "^2.8.3"
+  },
+  "name": "mapty",
+  "version": "1.0.0",
+  "description": "app for workout",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marselle13/mapty.git"
+  },
+  "author": "Nikoloz Gogua",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marselle13/mapty/issues"
+  },
+  "homepage": "https://github.com/marselle13/mapty#readme"
 }
