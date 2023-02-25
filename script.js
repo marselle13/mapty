@@ -1,6 +1,7 @@
 "use strict";
 
 const form = document.querySelector(".form");
+const clear = document.querySelector(".clear");
 const containerWorkouts = document.querySelector(".workouts");
 const inputType = document.querySelector(".form__input--type");
 const inputDistance = document.querySelector(".form__input--distance");
@@ -80,6 +81,8 @@ class App {
     form.addEventListener("submit", this._newWorkout.bind(this));
 
     inputType.addEventListener("change", this._toggleElevationField);
+
+    clear.addEventListener("click", this._reset);
   }
 
   _getPosition() {
@@ -105,7 +108,6 @@ class App {
     }).addTo(this.#map);
 
     this.#map.on("click", this._showForm.bind(this));
-
     this.#workouts.forEach((work) => {
       this._renderWorkoutMarker(work);
     });
@@ -147,7 +149,6 @@ class App {
 
     if (type === "running") {
       const cadence = +inputCadence.value;
-      console.log(cadence);
       if (
         !validInput(distance, duration, cadence) ||
         !allPositive(distance, duration, cadence)
@@ -173,7 +174,13 @@ class App {
   }
 
   _renderWorkoutMarker(workout) {
-    L.marker(workout.coords)
+    let myIcon = L.icon({
+      iconUrl: "marker-icon.61a78335.png",
+      iconAnchor: [15, 80],
+      popupAnchor: [-3, -70],
+    });
+
+    L.marker(workout.coords, { icon: myIcon })
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -248,6 +255,11 @@ class App {
     this.#workouts.forEach((work) => {
       this._renderWorkout(work);
     });
+  }
+
+  _reset() {
+    localStorage.removeItem("workouts");
+    location.reload();
   }
 }
 
